@@ -1,7 +1,11 @@
 class UsersController < ApplicationController
-  @questions = [
-      Question.new(text: 'Как дела?', created_at: Date.parse('27.03.2016'))
-  ]
+  # Загружаем юзера из базы для экшенов кроме :index, :create, :new
+  before_action :load_user, except: [:index, :create, :new]
+
+  # Проверяем имеет ли юзер доступ к экшену, делаем это для всех действий, кроме
+  # :index, :new, :create, :show — к этим действиям есть доступ у всех, даже у
+  # тех, у кого вообще нет аккаунта на нашем сайте.
+  before_action :authorize_user, except: [:index, :new, :create, :show]
 
   def index
     # Создаём массив из двух болванок пользователей. Вызываем метод # User.new, который создает модель, не записывая её в базу.
@@ -12,6 +16,9 @@ class UsersController < ApplicationController
   end
 
   def new
+    redirect_to root_url, alert: 'Вы уже залогинены' if current_user.present?
+
+    # Иначе, создаем болванку нового пользователя.
     @user = User.new
   end
 
@@ -19,34 +26,69 @@ class UsersController < ApplicationController
   end
 
   def create
+    # Если пользователь уже авторизован, ему не нужна новая учетная запись,
+    # отправляем его на главную с сообщением.
+    redirect_to root_url, alert: 'Вы уже залогинены' if current_user.present?
+
+    # Иначе, создаем нового пользователя с параметрами, которые нам предоставит
+    # метод user_params.
+
     @user = User.new(user_params)
+
+    # Пытаемся сохранить пользователя.
     if @user.save
-      # Если удачно, отправляем пользователя на главную с помощью метода redirect_to
-      # с сообщением
-      redirect_to root_url, notice: 'Пользователь успешно зарегистрирован!'
+      # Если удалось, отправляем пользователя на главную с сообщение, что
+      # пользователь создан.
+      redirect_to root_url, notice: 'Пользователь успешно зарегестрирован!'
+    else
+      # Если не удалось по какой-то причине сохранить пользователя, то рисуем
+      # (обратите внимание, это не редирект), страницу new с формой
+      # пользователя, который у нас лежит в переменной @user. В этом объекте
+      # содержатся ошибки валидации, которые выведет шаблон формы.
+      render 'new'
     end
   end
 
   def show
-    @user = User.new(
-        name: 'Vadim',
-        username: 'installero',
-        avatar_url: 'https://secure.gravatar.com/avatar/' \
-      '71269686e0f757ddb4f73614f43ae445?s=100'
-    )
-    @questions = [
-        Question.new(text: 'Как дела?', created_at: Date.parse('27.03.2016'))
-    ]
-    @new_question = Question.new
+    @user = User.find params[:id]
+    # берём вопросы у найденного юзера
+    @questions = @user.questions.order(created_at: :desc)
+
+    # Для формы нового вопроса создаём заготовку, вызывая build у результата вызова метода @user.questions.
+    @new_question = @user.questions.build
+  end
+
+  def update
+    # Получаем параметры нового (обновленного) пользователя с помощью метода user_params
+    @user = User.find user_params[:id]
+    # пытаемся обновить юзера
+    if @user.update(user_params)
+      # Если получилось, отправляем пользователя на его страницу с сообщением
+      redirect_to user_path(@user), notice: 'Данные обновлены'
+    else
+      # Если не получилось, как и в create, рисуем страницу редактирования
+      # пользователя со списком ошибок
+      render 'edit'
+    end
   end
 
   private
+
+  def authorize_user
+    reject_user unless @user == current_user
+  end
+
+  # Загружаем из базы запрошенного юзера, находя его по params[:id].
+  def load_user
+    @user ||= User.find params[:id]
+  end
 
   def user_params
     # берём объект params, потребуем у него иметь ключ
     # :user, у него с помощью метода permit разрешаем
     # набор инпутов. Ничего лишнего, кроме них, в пользователя не попадёт
-    params.require(:user).permit(:email, :password, :password_confirmation,
-                                 :name, :username, :avatar_url)
+    params.require(:user).permit(:password, :password_confirmation,
+                                 :name, :username, :avatar_url, :email)
   end
+
 end
