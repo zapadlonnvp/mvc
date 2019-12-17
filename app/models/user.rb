@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   ITERATIONS = 20_000
   DIGEST = OpenSSL::Digest::SHA256.new
 
-  attr_accessor :password, :email
+  attr_accessor :password
 
   has_many :questions
 
