@@ -14,6 +14,8 @@ gem 'puma', '~> 3.11'
 gem 'sass-rails', '~> 5'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem 'webpacker', '~> 4.0'
+gem 'russian', '~> 0.6.0'
+gem 'i18n'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.7'

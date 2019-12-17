@@ -53,7 +53,9 @@ class UsersController < ApplicationController
     @user = User.find params[:id]
     # берём вопросы у найденного юзера
     @questions = @user.questions.order(created_at: :desc)
-
+    count = @questions.count
+    plural = Russian.p(count, "вопрос", "вопроса", "вопросов")
+    @string = "у этого пользователя #{count} #{plural}"
     # Для формы нового вопроса создаём заготовку, вызывая build у результата вызова метода @user.questions.
     @new_question = @user.questions.build
   end
