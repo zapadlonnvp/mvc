@@ -1,20 +1,19 @@
 require 'openssl'
-require 'valid_email'
 
-class User < ActiveRecord::Base
-  include ActiveModel::Validations
+class User < ApplicationRecord
+
   ITERATIONS = 20_000
   DIGEST = OpenSSL::Digest::SHA256.new
 
   attr_accessor :password
 
   has_many :questions
-
+  before_validation :normalize_username
   validates :email, :username, presence: true
 
   validates :username, length: {maximum: 40}, format: {with: /\A[A-Za-z\d_]+\z/i}
   validates :email, :username, uniqueness: true
-  validates :email, :email => true
+  validates :email, 'valid_email2/email': true
   validates :password, presence: true, on: :create
 
   validates_confirmation_of :password
@@ -22,6 +21,9 @@ class User < ActiveRecord::Base
   before_save :encrypt_password
 
 
+  def normalize_username
+    username.downcase!
+  end
   def encrypt_password
     if password.present?
       # Создаем т. н. «соль» — рандомная строка усложняющая задачу хакерам по

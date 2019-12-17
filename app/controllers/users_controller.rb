@@ -39,7 +39,7 @@ class UsersController < ApplicationController
     if @user.save
       # Если удалось, отправляем пользователя на главную с сообщение, что
       # пользователь создан.
-      redirect_to root_url, notice: 'Пользователь успешно зарегестрирован!'
+      redirect_to root_url, notice: 'Пользователь успешно зарегистрирован!'
     else
       # Если не удалось по какой-то причине сохранить пользователя, то рисуем
       # (обратите внимание, это не редирект), страницу new с формой
@@ -87,8 +87,7 @@ class UsersController < ApplicationController
     # берём объект params, потребуем у него иметь ключ
     # :user, у него с помощью метода permit разрешаем
     # набор инпутов. Ничего лишнего, кроме них, в пользователя не попадёт
-    params.require(:user).permit(:password, :password_confirmation,
-                                 :name, :username, :avatar_url, :email)
+    params.require(:user).permit(:password, :password_confirmation, :name, :username, :avatar_url, :email)
   end
 
 end
