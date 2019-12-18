@@ -1,5 +1,6 @@
 require 'openssl'
 
+
 class User < ApplicationRecord
 
   ITERATIONS = 20_000
