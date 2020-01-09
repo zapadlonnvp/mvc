@@ -39,7 +39,7 @@ class UsersController < ApplicationController
     if @user.save
       # Если удалось, отправляем пользователя на главную с сообщение, что
       # пользователь создан.
-      redirect_to user_path(@user), notice: 'Пользователь успешно зарегистрирован!'
+      redirect_to sessions_create_path(user_params), notice: 'Пользователь успешно зарегистрирован!'
     else
       # Если не удалось по какой-то причине сохранить пользователя, то рисуем
       # (обратите внимание, это не редирект), страницу new с формой
