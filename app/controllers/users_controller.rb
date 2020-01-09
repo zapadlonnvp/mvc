@@ -39,7 +39,7 @@ class UsersController < ApplicationController
     if @user.save
       # Если удалось, отправляем пользователя на главную с сообщение, что
       # пользователь создан.
-      redirect_to root_url, notice: 'Пользователь успешно зарегистрирован!'
+      redirect_to user_path(@user), notice: 'Пользователь успешно зарегистрирован!'
     else
       # Если не удалось по какой-то причине сохранить пользователя, то рисуем
       # (обратите внимание, это не редирект), страницу new с формой
@@ -58,6 +58,9 @@ class UsersController < ApplicationController
     @string = "у этого пользователя #{count} #{plural}"
     # Для формы нового вопроса создаём заготовку, вызывая build у результата вызова метода @user.questions.
     @new_question = @user.questions.build
+    @questions_count = @questions.count
+    @answers_count = @questions.where.not(answer: nil).count
+    @unanswered_count = @questions_count - @answers_count
   end
 
   def update
