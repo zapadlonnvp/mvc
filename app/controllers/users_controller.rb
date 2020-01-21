@@ -78,6 +78,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    @user.destroy
+    redirect_to root_path, notice: 'Пользователь самоуничтожился :('
+  end
+
   private
 
   def authorize_user

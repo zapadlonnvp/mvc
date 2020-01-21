@@ -49,8 +49,14 @@
     <div class="form-action buffer-top">
       <%= f.hidden_field :id %>
       <%= f.submit 'Сохранить', class: 'button button-dark button-small' %>
+      <div class="button button-alert button-small">
+        <%= link_to 'Удалить аккаунт', user_path(@user),
+                    method: :delete, data: {confirm: 'Точно удалить?'} %>
+      </div>
     </div>
-
     <% end %>
+
+
   </div>
+
 </div>
