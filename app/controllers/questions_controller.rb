@@ -19,7 +19,7 @@ class QuestionsController < ApplicationController
   # /questions/edit
   def create
     @question = Question.new(question_params)
-
+    @question.asking_id = session[:user_id]
     if @question.save
       redirect_to user_path(@question.user), notice: 'Вопрос задан'
     else
@@ -79,9 +79,9 @@ class QuestionsController < ApplicationController
     # он может менять ответы на вопрос, ему доступно также поле :answer.
     if current_user.present? &&
         params[:question][:user_id].to_i == current_user.id
-      params.require(:question).permit(:user_id, :text, :answer)
+      params.require(:question).permit(:user_id, :text, :answer, :asking_id)
     else
-      params.require(:question).permit(:user_id, :text)
+      params.require(:question).permit(:user_id, :text, :asking_id)
     end
   end
 end

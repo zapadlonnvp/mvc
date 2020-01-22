@@ -7,6 +7,7 @@
       <%= question.text %>
     </div>
 
+
     <% if question.answer.present? %>
       <div class="question-answer text-lead">
         <%= question.answer %>
@@ -14,6 +15,12 @@
     <% end %>
 
     <div class="question-date">
+      Написал
+      <% if question.asking_id.present? %>
+        <%= link_to User.find(question.asking_id).username %>
+      <% else %>
+        <%= "аноним" %>
+      <% end %>
       <%= l(question.created_at, format: :short) %>
     </div>
   </div>
