@@ -17,7 +17,7 @@
     <div class="question-date">
       Написал
       <% if question.asking_id.present? %>
-        <%= link_to User.find(question.asking_id).username %>
+        <%= link_to User.find(question.asking_id).username, user_path(User.find(question.asking_id))%>
       <% else %>
         <%= "аноним" %>
       <% end %>
