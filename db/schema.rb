@@ -36,5 +36,5 @@ ActiveRecord::Schema.define(version: 2020_01_22_155553) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  add_foreign_key "questions", "users"
+  add_foreign_key "questions", "users" on_delete: cascade
 end
