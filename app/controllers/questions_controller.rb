@@ -8,7 +8,7 @@ class QuestionsController < ApplicationController
 
   def create
     @question = Question.new(question_params)
-    @question.asking_id = session[:user_id]
+    @question.author_id = session[:user_id]
     if @question.save
       redirect_to user_path(@question.user), notice: 'Вопрос задан'
     else
@@ -43,9 +43,9 @@ class QuestionsController < ApplicationController
   def question_params
     if current_user.present? &&
         params[:question][:user_id].to_i == current_user.id
-      params.require(:question).permit(:user_id, :text, :answer, :asking_id)
+      params.require(:question).permit(:user_id, :text, :answer, :author_id)
     else
-      params.require(:question).permit(:user_id, :text, :asking_id)
+      params.require(:question).permit(:user_id, :text, :author_id)
     end
   end
 end

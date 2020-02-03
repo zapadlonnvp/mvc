@@ -16,11 +16,12 @@
 
     <div class="question-date">
       Написал
-      <% if question.asking_id.present? %>
-        <%= link_to User.find(question.asking_id).username, user_path(User.find(question.asking_id))%>
+      <% if question.author_id.present? %>
+        <%= link_to User.find(question.author_id).username, user_path(User.find(question.author_id))%>   
       <% else %>
         <%= "аноним" %>
       <% end %>
+
       <%= l(question.created_at, format: :short) %>
     </div>
   </div>
