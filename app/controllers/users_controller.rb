@@ -48,7 +48,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    Question.where(author_id: @user.id).update(author_id: nil)
+    #Question.where(author_id: @user.id).update(author_id: nil)
     @user.destroy
     redirect_to root_path, notice: 'Пользователь самоуничтожился :('
   end
