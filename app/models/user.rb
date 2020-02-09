@@ -13,6 +13,7 @@ class User < ApplicationRecord
   validates :username, length: {maximum: 40}, format: {with: /\A[A-Za-z\d_]+\z/i}
   validates :email, 'valid_email2/email': true
   validates :password, presence: true, on: :create
+  validates :color, format: /#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/i, allow_blank: true
 
   validates_confirmation_of :password
   before_validation :normalize_user, on: [ :create, :update ]
